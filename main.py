@@ -12,7 +12,8 @@ voices = engine.getProperty('voices')
 #     print(i)
 #     print(voice)
 #     i += 1
-engine.setProperty('voice', voices[11].id)
+engine.setProperty('voice', voices[0].id)
+wikipedia.set_lang('pt')
 
 
 def talk(text):
@@ -23,9 +24,10 @@ def talk(text):
 def take_command():
     try:
         with sr.Microphone() as source:
+            # listener.adjust_for_ambient_noise(source)
             print("listening...")
             voice = listener.listen(source)
-            command = listener.recognize_google(voice)
+            command = listener.recognize_google(voice, language='pt-BR')
             command = command.lower()
 
             if 'alexa' in command:
@@ -43,22 +45,22 @@ def run_alexa():
     if command is None:
         pass
 
-    elif 'play' in command:
-        song = command.replace('play ', "")
-        talk('playing' + song)
+    elif 'toca' in command:
+        song = command.replace('toca ', "")
+        talk('tocando' + song)
         print(song)
         what.playonyt(song)
 
-    elif 'time' in command:
+    elif 'horas' in command:
         time = datetime.now().strftime('%I:%M %p')
-        talk(f'It is {time}')
+        talk(f'São {time}')
 
-    elif 'info' in command:
-        info = command.replace('info about', "")
-        # talk(what.info(info, lines=1))
+    elif 'quem é' in command:
+        info = command.replace('quem é', "")
         talk(wikipedia.summary(info, sentences=1))
     else:
-        talk("Please say the command again.")
+        talk("Oche fala de novo.")
+
 
 while True:
     run_alexa()
